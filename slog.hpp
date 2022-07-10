@@ -8,7 +8,6 @@
 
 #define slog(x) simple_logger(simple_logger::log_type::x)
 
-
 class simple_logger
 {
 public:
@@ -43,8 +42,6 @@ public:
 private:
     log_type t_;
     std::ostringstream stream_;
-
-    // ----------------------------------------
 
     class LogManager {
     public:
@@ -168,5 +165,5 @@ private:
         bool stdout_{true};
     };
 
-    inline static LogManager manager_{LogManager()};
+    inline static LogManager manager_;
 };
