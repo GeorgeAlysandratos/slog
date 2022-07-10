@@ -164,8 +164,6 @@ private:
         std::tm file_tm{0};
         std::string file_basename_;
         std::ofstream file_;
-
-        std::tm file_time_;
         bool stdout_{true};
     };
 
