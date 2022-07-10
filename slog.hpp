@@ -6,18 +6,19 @@
 #include <cstring>
 #include <mutex>
 
-#define slog(x) simple_logger(simple_logger_log_type::x)
+#define slog(x) simple_logger(simple_logger::log_type::x)
 
-enum class simple_logger_log_type {
-    info,
-    warn,
-    error
-};
 
 class simple_logger
 {
 public:
-    simple_logger(simple_logger_log_type t)
+    enum class log_type {
+        info,
+        warn,
+        error
+    };
+
+    simple_logger(log_type t)
     : t_{t} {
     }
 
@@ -40,7 +41,7 @@ public:
     }
 
 private:
-    simple_logger_log_type t_;
+    log_type t_;
     std::ostringstream stream_;
 
     // ----------------------------------------
@@ -52,45 +53,45 @@ private:
         }
 
         void add_log(simple_logger& log_entry) {
-            auto get_output = [](simple_logger_log_type t) {
+            auto get_output = [](log_type t) {
                 switch(t) {
-                    case simple_logger_log_type::info:
+                    case log_type::info:
                         return "INFO";
                         break;
-                    case simple_logger_log_type::warn:
+                    case log_type::warn:
                         return "WARN";
                         break;
-                    case simple_logger_log_type::error:
+                    case log_type::error:
                         return " ERR";
                         break;
                 }
                 return "";
             };
 
-            auto get_color_output = [](simple_logger_log_type t) {
+            auto get_color_output = [](log_type t) {
                 switch(t) {
-                    case simple_logger_log_type::info:
+                    case log_type::info:
                         return "\033[0;97mINFO\033[0m";
                         break;
-                    case simple_logger_log_type::warn:
+                    case log_type::warn:
                         return "\033[1;93mWARN\033[0m";
                         break;
-                    case simple_logger_log_type::error:
+                    case log_type::error:
                         return " \033[1;31mERR\033[0m";
                         break;
                 }
                 return "";
             };
 
-            auto get_color = [](simple_logger_log_type t) {
+            auto get_color = [](log_type t) {
                 switch(t) {
-                    case simple_logger_log_type::info:
+                    case log_type::info:
                         return "\033[0;97m";
                         break;
-                    case simple_logger_log_type::warn:
+                    case log_type::warn:
                         return "\033[0;93m";
                         break;
-                    case simple_logger_log_type::error:
+                    case log_type::error:
                         return "\033[1;31m";
                         break;
                 }
