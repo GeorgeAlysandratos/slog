@@ -104,11 +104,9 @@ private:
 
 			std::lock_guard<std::mutex> lock(mutex_);
 
-			check_file();
-
 			char time[9];
-			std::time_t now = std::time(nullptr);
-			std::tm now_tm = *std::localtime(&now);
+			std::tm now_tm = check_file();
+
 			std::strftime(time, sizeof(time), "%T", &now_tm);
 			std::timespec ts;
 			std::timespec_get(&ts, TIME_UTC);
@@ -141,13 +139,12 @@ private:
 		}
 
 	private:
-		void check_file() {
-			constexpr std::size_t FILENAME_LENGTH{13};
+		std::tm check_file() {
 			std::time_t now = std::time(nullptr);
 			std::tm now_tm = *std::localtime(&now);
 			if(file_tm.tm_mday != now_tm.tm_mday or file_tm.tm_mon != now_tm.tm_mon) {
 				file_tm = now_tm;
-				char current[FILENAME_LENGTH]{ 0 };
+				char current[32]{ 0 };
 				std::strftime(current, sizeof(current), "%d-%m-%y.txt", &now_tm);
 				std::string filename;
 				if(file_basename_.length() > 0) {
@@ -159,6 +156,7 @@ private:
 				file_.open(filename, std::ofstream::out | std::ofstream::app);
 				file_ << std::endl;
 			}
+			return now_tm;
 		}
 
 		std::mutex mutex_;
