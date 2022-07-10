@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <cstring>
 
 #define slog(x) simple_logger(simple_logger_log_type::x)
 
@@ -33,6 +34,10 @@ public:
 		manager_.set_stdout(val);
 	}
 
+	static void set_basename(const char* filename) {
+		manager_.set_basename(filename);
+	}
+
 private:
 	simple_logger_log_type t_;
 	std::ostringstream stream_;
@@ -43,7 +48,6 @@ private:
 	public:
 		LogManager() {
 			std::ios::sync_with_stdio(false);
-			check_file();
 		}
 
 		void add_log(simple_logger& log_entry) {
@@ -65,7 +69,7 @@ private:
 			auto get_color_output = [](simple_logger_log_type t) {
 				switch(t) {
 					case simple_logger_log_type::info:
-						return "\033[0;37mINFO\033[0m";
+						return "\033[0;97mINFO\033[0m";
 						break;
 					case simple_logger_log_type::warn:
 						return "\033[1;93mWARN\033[0m";
@@ -80,7 +84,7 @@ private:
 			auto get_color = [](simple_logger_log_type t) {
 				switch(t) {
 					case simple_logger_log_type::info:
-						return "\033[0;37m";
+						return "\033[0;97m";
 						break;
 					case simple_logger_log_type::warn:
 						return "\033[0;93m";
@@ -116,38 +120,50 @@ private:
 				std::cout 	<< time << '.'
 							<< std::setw(5) << std::setfill('0') << milliseconds
 							<< ' ' << get_color_output(log_entry.t_) << " - "
-							<< get_color(log_entry.t_) << stream.str() << reset_color() << std::endl;
+							<< get_color(log_entry.t_) << stream.str() << reset_color()
+							<< std::endl;
 
 				std::cout.flags( f );
 			}
 
 			file_ 	<< time << '.'
 					<< std::setw(5) << std::setfill('0') << milliseconds << std::setw(0)
-					<< ' ' << get_output(log_entry.t_) << " - " << stream.str() << std::endl;
+					<< ' ' << get_output(log_entry.t_) << " - " << stream.str()
+					<< std::endl;
 		}
 
 		void set_stdout(bool val) {
 			stdout_ = val;
 		}
 
-	private:
-		static constexpr std::size_t FILENAME_LENGTH{13};
+		void set_basename(const char* filename) {
+			file_basename_ = filename;
+		}
 
+	private:
 		void check_file() {
-			char current[FILENAME_LENGTH];
+			constexpr std::size_t FILENAME_LENGTH{13};
 			std::time_t now = std::time(nullptr);
 			std::tm now_tm = *std::localtime(&now);
-			std::strftime(current, sizeof(current), "%d-%m-%y.txt", &now_tm);
-			if( strcmp(file_name_, current) != 0 ) {
+			if(file_tm.tm_mday != now_tm.tm_mday or file_tm.tm_mon != now_tm.tm_mon) {
+				file_tm = now_tm;
+				char current[FILENAME_LENGTH]{ 0 };
+				std::strftime(current, sizeof(current), "%d-%m-%y.txt", &now_tm);
+				std::string filename;
+				if(file_basename_.length() > 0) {
+					filename.append(file_basename_);
+					filename.append(".");
+				}
+				filename.append(current);
 				file_.close();
-				memcpy(file_name_, current, FILENAME_LENGTH);
-				file_.open(file_name_, std::ofstream::out | std::ofstream::app);
-				file_ << '\n';
+				file_.open(filename, std::ofstream::out | std::ofstream::app);
+				file_ << std::endl;
 			}
 		}
 
 		std::mutex mutex_;
-		char file_name_[FILENAME_LENGTH]{0};
+		std::tm file_tm{0};
+		std::string file_basename_;
 		std::ofstream file_;
 
 		std::tm file_time_;
