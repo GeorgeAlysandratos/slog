@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <fstream>
 #include <cstring>
+#include <mutex>
 
 #define slog(x) simple_logger(simple_logger_log_type::x)
 
