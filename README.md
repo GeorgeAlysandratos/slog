@@ -12,20 +12,20 @@ By default it logs to output but you can disable that `simple_logger::set_stdout
 #include <slog/slog.hpp>
 
 int main(int argc, char* argv[]) {
-	// simple_logger::set_stdout(false);
-	simple_logger::set_basename("my-server");
+    // simple_logger::set_stdout(false);
+    simple_logger::set_basename("my-server");
 
-	int count = 0;
-	while(count < 2) {
-		slog(info) << "All is good in the good. Order a pizza...";
-		slog(info) << "... and don't forget your beer";
-		slog(warn) << "SOMETHING WICKED THIS WAY COMES";
-		slog(warn) << "... its the pizza man...";
-		slog(error) << "... but he didnt bring a beer ...";
-		slog(error) << "----------SORT THIS OUT MATE -----------";
-		++count;
-	}
+    int count = 0;
+    while(count < 2) {
+        slog(info) << "All is good in the hood.... Order a pizza...";
+        slog(info) << "... and don't forget to get a beer too ...";
+        slog(warn) << "SOMETHING WICKED THIS WAY COMES";
+        slog(warn) << "oh ... its the pizza man...";
+        slog(error) << "... but he didnt bring a beer ...";
+        slog(error) << "----------SORT THIS OUT MATE -----------";
+        ++count;
+    }
 
-	return 0;
+    return 0;
 }
 ```
