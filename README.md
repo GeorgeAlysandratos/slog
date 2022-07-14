@@ -1,7 +1,7 @@
 # slog
 This is just a basic logger (that also provides colourful stdout output)
 
-Requires C++20
+Requires C++17
 
 It is not supposed to be performant or even smart.
 Just basic output (in a simple date-based file) with colour
