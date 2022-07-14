@@ -1,10 +1,13 @@
 # slog
 This is just a basic logger (that also provides colourful stdout output)
 
+Requires C++20
+
 It is not supposed to be performant or even smart.
 Just basic output (in a simple date-based file) with colour
 
-Make sure you `simple_logger::set_basename("my-log-file-name");` before you use it
+Make sure you `simple_logger::set_basename("my-log-file-name");` before you use it.
+You do not have to, but you will just get a filename like `10-07-22.txt`. Up to you.
 
 By default it logs to output but you can disable that `simple_logger::set_stdout(false);`
 
