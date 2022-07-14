@@ -15,17 +15,15 @@ int main(int argc, char* argv[]) {
     // simple_logger::set_stdout(false);
     simple_logger::set_basename("my-server");
 
-    int count = 0;
-    while(count < 2) {
-        slog(info) << "All is good in the hood.... Order a pizza...";
-        slog(info) << "... and don't forget to get a beer too ...";
-        slog(warn) << "SOMETHING WICKED THIS WAY COMES";
-        slog(warn) << "oh ... its the pizza man...";
-        slog(error) << "... but he didnt bring a beer ...";
-        slog(error) << "----------SORT THIS OUT MATE -----------";
-        ++count;
-    }
+    slog(info) << "All is good in the hood.... Order a pizza...";
+    slogf(info) << "... and don't forget to get a beer too ...";
+    slog(warn) << "SOMETHING WICKED THIS WAY COMES";
+    slogf(warn) << "oh ... its the pizza man...";
+    slog(error) << "... but he didnt bring a beer ...";
+    slogf(error) << "----------SORT THIS OUT MATE -----------";
 
     return 0;
 }
 ```
+
+![Alt text](example.png?raw=true "Title")
